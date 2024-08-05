@@ -38,8 +38,14 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         return userRepository.findById(id)
-                .map(user -> ResponseEntity.ok().body(user))
-                .orElse(ResponseEntity.notFound().build());
+                .map(user -> {
+                    System.out.println("Найден пользователь: " + user); // Выводим информацию о пользователе в консоль
+                    return ResponseEntity.ok().body(user);
+                })
+                .orElseGet(() -> {
+                    System.out.println("Пользователь с ID " + id + " не найден."); // Выводим сообщение в консоль при неудаче
+                    return ResponseEntity.notFound().build();
+                });
     }
 
     @PostMapping
