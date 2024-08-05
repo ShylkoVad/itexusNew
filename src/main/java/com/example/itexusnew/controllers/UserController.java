@@ -68,12 +68,12 @@ public class UserController {
                     user.setFirst_name(userDetails.getFirst_name());
                     user.setLast_name(userDetails.getLast_name());
                     user.setEmail(userDetails.getEmail());
-                    user.setRole_user_1(user.getRole_user_1());
-                    user.setRole_user_2(user.getRole_user_2());
-                    user.setRole_user_3(user.getRole_user_3());
-                    user.setPhone_number_1(user.getPhone_number_1());
-                    user.setPhone_number_2(user.getPhone_number_2());
-                    user.setPhone_number_3(user.getPhone_number_3());
+                    user.setRole_user_1(userDetails.getRole_user_1());
+                    user.setRole_user_2(userDetails.getRole_user_2());
+                    user.setRole_user_3(userDetails.getRole_user_3());
+                    user.setPhone_number_1(userDetails.getPhone_number_1());
+                    user.setPhone_number_2(userDetails.getPhone_number_2());
+                    user.setPhone_number_3(userDetails.getPhone_number_3());
                     User updatedUser = userRepository.save(user);
                     return ResponseEntity.ok(updatedUser);
                 })
