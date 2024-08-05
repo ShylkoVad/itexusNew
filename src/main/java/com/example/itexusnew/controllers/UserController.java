@@ -5,6 +5,7 @@ import com.example.itexusnew.repositories.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -83,20 +84,29 @@ public class UserController {
     // Обновить пользователя
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable int id, @Valid @RequestBody User userDetails) {
-        return userRepository.findById(id)
-                .map(user -> {
-                    user.setFirst_name(userDetails.getFirst_name());
-                    user.setLast_name(userDetails.getLast_name());
-                    user.setEmail(userDetails.getEmail());
-                    user.setRole_user_1(userDetails.getRole_user_1());
-                    user.setRole_user_2(userDetails.getRole_user_2());
-                    user.setRole_user_3(userDetails.getRole_user_3());
-                    user.setPhone_number_1(userDetails.getPhone_number_1());
-                    user.setPhone_number_2(userDetails.getPhone_number_2());
-                    user.setPhone_number_3(userDetails.getPhone_number_3());
-                    User updatedUser = userRepository.save(user);
-                    return ResponseEntity.ok(updatedUser);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            return userRepository.findById(id)
+                    .map(user -> {
+                        user.setFirst_name(userDetails.getFirst_name());
+                        user.setLast_name(userDetails.getLast_name());
+                        user.setEmail(userDetails.getEmail());
+                        user.setRole_user_1(userDetails.getRole_user_1());
+                        user.setRole_user_2(userDetails.getRole_user_2());
+                        user.setRole_user_3(userDetails.getRole_user_3());
+                        user.setPhone_number_1(userDetails.getPhone_number_1());
+                        user.setPhone_number_2(userDetails.getPhone_number_2());
+                        user.setPhone_number_3(userDetails.getPhone_number_3());
+
+                        User updatedUser = userRepository.save(user);
+                        return ResponseEntity.ok(updatedUser);
+                    })
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (DataIntegrityViolationException e) {
+            // Подходящий ответ в случае нарушения целостности данных
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            // Обработка других неожиданных исключений
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }
