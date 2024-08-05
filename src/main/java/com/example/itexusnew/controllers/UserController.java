@@ -66,13 +66,18 @@ public class UserController {
 
     // Удалить пользователя
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
-        return userRepository.findById(id)
-                .map(user -> {
-                    userRepository.delete(user);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<String> deleteUser(@PathVariable int id) {
+        try {
+            return userRepository.findById(id)
+                    .map(user -> {
+                        userRepository.delete(user);
+                        return ResponseEntity.ok("Пользователь успешно удален."); // Успешный ответ
+                    })
+                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Пользователь не найден.")); // Если пользователь не найден
+        } catch (Exception e) {
+            System.err.println("Ошибка при удалении пользователя: " + e.getMessage()); // Логируем ошибку
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка сервера при удалении пользователя."); // Ошибка сервера
+        }
     }
 
     // Обновить пользователя
