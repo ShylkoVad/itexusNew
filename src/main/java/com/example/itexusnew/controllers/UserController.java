@@ -50,9 +50,18 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        // Здесь нужно добавить логику по обработке ролей и номеров телефонов
-        User savedUser = userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        try {
+            // Здесь нужно добавить логику по обработке ролей и номеров телефонов
+            User savedUser = userRepository.save(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        } catch (Exception e) {
+            // Логирование ошибки (если необходимо)
+            System.err.println("Ошибка при создании пользователя: " + e.getMessage());
+
+            // Возвращаем ответ с ошибкой
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null); // Или вы можете вернуть собственный объект с сообщением об ошибке
+        }
     }
 
     // Удалить пользователя
