@@ -37,6 +37,7 @@ public class User extends BaseEntity {
     @NotBlank(message = "Поле должно быть заполнено!")
     @NotNull(message = "Поле должно быть заполнено!")
     @Column(name = "email", unique = true)
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Email должен иметь формат *******@**.*")
     private String email;
 
     @Pattern(regexp = "^375\\d{9}$", message = "Телефон должен иметь формат 375*********")
